@@ -1,6 +1,22 @@
 knxd [![Build Status](https://travis-ci.org/knxd/knxd.svg)](https://travis-ci.org/knxd/knxd)
 ====
 
+# About this fork
+
+This fork changes knxd_args so that it accepts arguments from a file rather than from _argv_. The main benefit here is that it makes the program much easier to fuzz. So instead of doing `knxd_args -e 0.0.1 -E 0.0.2:8 -ib ip: -DTRS`, you would do `knxd_args <file>`, where `<file>` has the following contents:
+
+```
+-e
+0.0.1
+-E
+0.0.2:8
+-ib
+ip:
+-DTRS
+```
+
+# Original README.md
+
 KNX is a very common building automation protocol which runs on dedicated 9600-baud wire as well as IP multicast.
 ``knxd`` is an advanced router/gateway which runs on any Linux computer; it can talk to all known KNX interfaces.
 
