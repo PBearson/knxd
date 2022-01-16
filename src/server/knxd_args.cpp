@@ -726,7 +726,39 @@ main (int ac, char *ag[])
   int index;
   setlinebuf(stdout);
 
-  argp_parse (&argp, ac, ag, ARGP_IN_ORDER, &index, &arg);
+  // BEGIN convert file contents to typical argv arguments
+
+  char* my_argv[100];
+  for(int i = 0; i < 100; i++) my_argv[i] = (char*)(malloc(100));
+  my_argv[0] = "/usr/lib/knxd_args";
+
+  printf("%s\n", ag[1]);
+  FILE* fp = fopen(ag[1], "r");
+
+  if(!fp)
+  {
+    printf("File not found\n");
+    return -1;
+  }
+
+  int my_index = 1;
+  char* line = NULL;
+  size_t len = 0;
+  while(getline(&line, &len, fp) >= 0)
+  {
+      if(my_index == 98) break;
+
+      line[strcspn(line, "\n")] = 0;
+      strncpy(my_argv[my_index], line, 100);
+      my_index++;
+  }
+  my_argv[my_index] = NULL;
+
+  fclose(fp);
+  
+  // END
+
+  argp_parse (&argp, my_index, my_argv, ARGP_IN_ORDER, &index, &arg);
   ini.write(std::cout);
 
   return 0;
